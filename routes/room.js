@@ -56,14 +56,16 @@ router.get("/api/room", async (req, res) => {
     if (priceMax !== undefined) {
       options.price = { $lt: priceMax };
     }
-    if (city !== null) {
+    if (city !== undefined) {
       options.city = city;
     }
+    //console.log(options);
     const room = await db_room.find(options);
     const resultats = {
       rooms: room,
       count: room.length
     };
+
     return res.json(resultats);
   } catch (error) {
     res.status(400).json({ error: error.message });
