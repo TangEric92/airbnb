@@ -46,36 +46,31 @@ router.get("/api/room", async (req, res) => {
   const city = req.query.city;
   const priceMin = req.query.priceMin;
   const priceMax = req.query.priceMax;
-
+  const page = req.query.page;
   //console.log(city);
+
+  const options = {};
+  if (priceMin !== undefined) {
+    options.price = { $gt: priceMin };
+  }
+  if (priceMax !== undefined) {
+    options.price = { $lt: priceMax };
+  }
+  if (city) {
+    options.city = new RegExp(city, "i");
+  }
+  //console.log(options);
   try {
-    const options = {};
-    if (priceMin !== undefined) {
-      options.price = { $gt: priceMin };
-    }
-    if (priceMax !== undefined) {
-      options.price = { $lt: priceMax };
-    }
-    if (city !== undefined) {
-      options.city = new Regex(city, "i");
-    }
-    //console.log(options);
-    const room = await db_room.find(options);
+    const search = db_room.find(options);
 
-    // Pagination
-    /*
-    if (req.query.page) {
-      const page = req.query.page;
-      const limit = 2;
-      room.limit(limit).skip(limit * page);
+    if (page) {
+      const limit = 5;
+      const skip = limit * page;
+      search.limit(limit).skip(skip);
     }
-*/
-    const resultats = await {
-      rooms: room,
-      count: room.length
-    };
+    const resultats = await search;
 
-    return res.json(resultats);
+    return res.json({ rooms: resultats, count: resultats.length });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
