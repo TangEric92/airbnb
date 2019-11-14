@@ -57,7 +57,7 @@ router.get("/api/room", async (req, res) => {
       options.price = { $lt: priceMax };
     }
     if (city !== undefined) {
-      options.city = city;
+      options.city = new Regex(city, "i");
     }
     //console.log(options);
     const room = await db_room.find(options);
