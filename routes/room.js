@@ -61,7 +61,16 @@ router.get("/api/room", async (req, res) => {
     }
     //console.log(options);
     const room = await db_room.find(options);
-    const resultats = {
+
+    // Pagination
+    /*
+    if (req.query.page) {
+      const page = req.query.page;
+      const limit = 2;
+      room.limit(limit).skip(limit * page);
+    }
+*/
+    const resultats = await {
       rooms: room,
       count: room.length
     };
