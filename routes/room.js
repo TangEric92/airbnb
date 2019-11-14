@@ -50,11 +50,12 @@ router.get("/api/room", async (req, res) => {
   //console.log(city);
 
   const options = {};
+  options.price = {};
   if (priceMin !== undefined) {
-    options.price = { $gt: priceMin };
+    options.price.$gt = priceMin;
   }
   if (priceMax !== undefined) {
-    options.price = { $lt: priceMax };
+    options.price.$lt = priceMax;
   }
   if (city) {
     options.city = new RegExp(city, "i");
